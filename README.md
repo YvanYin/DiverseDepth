@@ -1,2 +1,3 @@
-# DiverseDepth
-The code and data of DiverseDepth
+# DiverseDepth: Affine-invariant Depth Prediction Using Diverse Data
+
+The code and data will be released later.
