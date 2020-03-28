@@ -59,7 +59,7 @@ If you want to test the kitti dataset, please see [here](./datasets/KITTI/README
 ### Citation
 ```
 @inproceedings{Yin2019enforcing,
-  title={Enforcing geometric constraints of virtual normal for depth prediction},
+  title={DiverseDepth: Affine-invariant Depth Prediction Using Diverse Data},
   author={Wei Yin, Xinlong Wang, Chunhua Shen, Yifan Liu, Zhi Tian, Songcen Xu, Changming Sun},
   booktitle= {arxiv: 2002.00569},
   year={2020}
