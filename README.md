@@ -58,10 +58,10 @@ If you want to test the kitti dataset, please see [here](./datasets/KITTI/README
 
 ### Citation
 ```
-@inproceedings{Yin2019enforcing,
+@article{yin2020diversedepth,
   title={DiverseDepth: Affine-invariant Depth Prediction Using Diverse Data},
-  author={Wei Yin, Xinlong Wang, Chunhua Shen, Yifan Liu, Zhi Tian, Songcen Xu, Changming Sun},
-  booktitle= {arxiv: 2002.00569},
+  author={Yin, Wei and Wang, Xinlong and Shen, Chunhua and Liu, Yifan and Tian, Zhi and Xu, Songcen and Sun, Changming and Renyin, Dou},
+  journal={arXiv preprint arXiv:2002.00569},
   year={2020}
 }
 ```
