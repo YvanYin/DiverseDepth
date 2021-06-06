@@ -1,6 +1,5 @@
 from collections import OrderedDict
 import torch.nn as nn
-from lib.core.config import cfg
 
 # ---------------------------------------------------------------------------- #
 # Bits for specific architectures (ResNeXt50, ResNeXt101, ...)
@@ -56,11 +55,9 @@ class ResNeXt_body(nn.Module):
         def freeze_params(m):
             for p in m.parameters():
                 p.requires_grad = False
-        if cfg.MODEL.FREEZE_BACKBONE_BN:
-            self.apply(lambda m: freeze_params(m) if isinstance(m, nn.BatchNorm2d) else None)
 
 def basic_bn_stem():
-    conv1 = nn.Conv2d(cfg.MODEL.ENCODER_INPUT_C, 64, 7, stride=2, padding=3, bias=False)
+    conv1 = nn.Conv2d(3, 64, 7, stride=2, padding=3, bias=False)
     return nn.Sequential(OrderedDict([
         ('conv1', conv1),
         ('bn1', nn.BatchNorm2d(64)),

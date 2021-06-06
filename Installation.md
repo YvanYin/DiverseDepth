@@ -1,8 +1,8 @@
 ## Installation
 
 ###Requirements
-- PyTorch = 1.1.0
-- torchvision == 0.2.1
+- PyTorch >= 1.1.0
+- torchvision >= 0.2.1
 - matplotlib
 - opencv-python
 - dill
@@ -13,15 +13,13 @@
 ```bash
 # Firstly, your conda is setup properly with the right environment for that
 
-conda create --n VNL python=3.6
-conda activate VNL
+conda create --n DiverseDepth python=3.7
+conda activate DiverseDepth
 
 
 # basic packages
 conda install matplotlib dill pyyaml opencv scipy 
 
 # follow PyTorch installation in https://pytorch.org/get-started/locally/
-# we give the instructions for CUDA 9.0
-conda install -c pytorch torchvision=0.2.1 cudatoolkit=9.0
-
+conda install -c pytorch==1.4.0 torchvision=0.5.0 cudatoolkit=10.0
 ```

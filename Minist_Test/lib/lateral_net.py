@@ -1,23 +1,19 @@
 import torch
 import torch.nn as nn
-from lib.core.config import cfg
-import lib.models.ResNeXt as ResNeXt
-import lib.utils.resnext_weights_helper as resnext_utils
-import lib.utils.mobilenetv2_weight_helper as mobilenet_utils
+import Minist_Test.lib.ResNeXt as ResNeXt
 from torch.nn import functional as F
 import math
 
 def lateral_resnext50_32x4d_body_stride16():
     return lateral(ResNeXt.ResNeXt50_32x4d_body_stride16)
 
-
 class lateral(nn.Module):
     def __init__(self, conv_body_func):
         super().__init__()
 
-        self.dim_in = cfg.MODEL.RESNET_BOTTLENECK_DIM
+        self.dim_in = [64, 256, 512, 1024, 2048]
         self.dim_in = self.dim_in[-1:0:-1]
-        self.dim_out = cfg.MODEL.LATERAL_OUT
+        self.dim_out = [512, 256, 256, 256]
 
         self.num_lateral_stages = len(self.dim_in)
         self.topdown_lateral_modules = nn.ModuleList()
@@ -27,20 +23,9 @@ class lateral(nn.Module):
                 lateral_block(self.dim_in[i], self.dim_out[i]))
 
         self.bottomup = conv_body_func()
-        dilation_rate = [4, 8, 12] if 'stride_8' in cfg.MODEL.ENCODER else [2, 4, 6]
-        encoder_stride = 8 if 'stride8' in cfg.MODEL.ENCODER else 16
-        self.bottomup_top = ASPP_block(self.dim_in[0], self.dim_out[0], dilation_rate, encoder_stride) if 'resnext' in cfg.MODEL.ENCODER.lower() \
-                            else Global_pool_block(self.dim_in[0], self.dim_out[0])
-        self._init_modules(cfg.MODEL.INIT_TYPE)
-
-    def _init_modules(self, init_type):
-        if cfg.MODEL.LOAD_IMAGENET_PRETRAINED_WEIGHTS:
-            if 'resnext' in cfg.MODEL.ENCODER.lower():
-                resnext_utils.load_pretrained_imagenet_resnext_weights(self.bottomup)
-            elif 'mobilenetv2' in cfg.MODEL.ENCODER.lower():
-                mobilenet_utils.load_pretrained_imagenet_resnext_weights(self.bottomup)
-
-        self._init_weights(init_type)
+        dilation_rate = [2, 4, 6]
+        encoder_stride = 16
+        self.bottomup_top = ASPP_block(self.dim_in[0], self.dim_out[0], dilation_rate, encoder_stride)
 
     def _init_weights(self, init_type='xavier'):
         def init_func(m):
@@ -61,11 +46,7 @@ class lateral(nn.Module):
                 if not isinstance(child_m, nn.ModuleList):
                     child_m.apply(init_func)
 
-        if cfg.MODEL.LOAD_IMAGENET_PRETRAINED_WEIGHTS:
-            init_model_weight(self.topdown_lateral_modules)
-            init_model_weight(self.bottomup_top)
-        else:
-            init_model_weight(self)
+        init_model_weight(self)
 
     def forward(self, x):
         _, _, h, w = x.shape
@@ -126,22 +107,6 @@ class ASPP_block(nn.Module):
         out = torch.cat([x1, x2, x3, x4, x5], 1)
         return out
 
-class Global_pool_block(nn.Module):
-    def __init__(self, dim_in, dim_out):
-        super().__init__()
-        self.dim_in = dim_in
-        self.dim_out = dim_out
-        self.globalpool_conv1x1 = nn.Conv2d(self.dim_in, self.dim_out, 1, stride=1, padding=0, bias=False)
-        self.globalpool = nn.AdaptiveAvgPool2d((1, 1))
-        self.globalpool_bn = nn.BatchNorm2d(self.dim_out, momentum=0.9)
-
-    def forward(self, x):
-        out = self.globalpool_conv1x1(x)
-        out = self.globalpool_bn(out)
-        w, h = x.size(2), x.size(3)
-        out = self.globalpool(out)
-        out = F.upsample(input=out, size=(w, h), mode='bilinear', align_corners=True)
-        return out
 
 class lateral_block(nn.Module):
     def __init__(self, dim_in, dim_out):
@@ -159,11 +124,11 @@ class fcn_topdown(nn.Module):
     def __init__(self):
         super().__init__()
 
-        self.dim_in = cfg.MODEL.FCN_DIM_IN
-        self.dim_out = cfg.MODEL.FCN_DIM_OUT + [cfg.MODEL.DECODER_OUTPUT_C]
+        self.dim_in = [512, 256, 256, 256, 256, 256]
+        self.dim_out = [256, 256, 256, 256, 256] + [1, ]
 
         self.num_fcn_topdown = len(self.dim_in)
-        self.top_conv_num = 5 if 'resnext' in cfg.MODEL.ENCODER.lower() else 1
+        self.top_conv_num = 5
         self.top = nn.Sequential(
             nn.Conv2d(self.dim_in[0] * self.top_conv_num, self.dim_in[0], 1, stride=1, padding=0, bias=False),
             nn.BatchNorm2d(self.dim_in[0], 0.5)
@@ -175,7 +140,7 @@ class fcn_topdown(nn.Module):
         self.topdown_fcn5 = fcn_last_block(self.dim_in[4], self.dim_out[4])
         self.topdown_predict = fcn_topdown_predict(self.dim_in[5], self.dim_out[5])
 
-        self.init_type = cfg.MODEL.INIT_TYPE
+        self.init_type = 'xavier'
         self._init_modules(self.init_type)
 
     def _init_modules(self, init_type):

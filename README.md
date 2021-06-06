@@ -1,7 +1,9 @@
-#### DiverseDepth: Affine-invariant Depth Prediction Using Diverse Data.
+#### DiverseDepth Project
+This project aims to improve the generalization ability of the monocular depth estimation method on diverse scenes. We propose a learning method and a diverse dataset, termed DiverseDepth, to solve this problem. 
 
 This repository contains the source code of our paper:
-[Wei Yin, Xinlong Wang, Chunhua Shen, Yifan Liu, Zhi Tian, Songcen Xu, Changming Sun, DiverseDepth: Affine-invariant Depth Prediction Using Diverse Data](https://arxiv.org/abs/2002.00569).
+1. [Wei Yin, Xinlong Wang, Chunhua Shen, Yifan Liu, Zhi Tian, Songcen Xu, Changming Sun, DiverseDepth: Affine-invariant Depth Prediction Using Diverse Data](https://arxiv.org/abs/2002.00569).
+2. [Wei Yin, Yfan Liu, Chunhua Shen, Virtual Normal: Enforcing Geometric Constraints for Accurate and Robust Depth Prediction](https://arxiv.org/abs/2103.04216).
 
 ## Some Results
 
@@ -14,8 +16,7 @@ This repository contains the source code of our paper:
 
 ****
 ## Hightlights
-- **Generalization:** We have tested on several zero-shot datasets to test the generalization of our method. 
-
+- **Generalization:** Our method demonstrates strong generalization ability on several zero-shot datasets.
 
 
 ****
@@ -23,41 +24,45 @@ This repository contains the source code of our paper:
 - Please refer to [Installation](./Installation.md).
 
 ## Datasets
-We collect multiply source data to construct our DiverseDepth dataset, including crawling online stereoscopic images, images from DIML and Taskonomy. These three parts form the foreground parts (Part-fore), outdoor scenes (Part-out) and indoor scenes (Part-in) of our dataset. 
-The size of three parts are:
+We collect multi-source data to construct our DiverseDepth dataset. It consists of three parts:
 Part-in:  contains 93838 images
 Part-out: contains 120293 images
 Part-fore: contains 109703 images
- We will release the dataset as soon as possible. 
-  
-## Model Zoo
-- ResNext50_32x4d backbone, trained on DiverseDepth dataset, download [here](https://cloudstor.aarnet.edu.au/plus/s/ixWf3nTJFZ0YE4q)
+You can download them with the following method.
 
-
-  
-## Inference
-
-```bash
-# Run the inferece on NYUDV2 dataset
- python  ./tools/test_diversedepth_nyu.py \
-		--dataroot    ./datasets/NYUDV2 \
-		--dataset     nyudv2 \
-		--cfg_file     lib/configs/resnext50_32x4d_diversedepth_regression_vircam \
-		--load_ckpt   ./model.pth 
-		
-# Test depth predictions on any images, please replace the data dir in test_any_images.py
- python  ./tools/test_any_diversedepth.py \
-		--dataroot    ./ \
-		--dataset     any \
-		--cfg_file     lib/configs/resnext50_32x4d_diversedepth_regression_vircam \
-		--load_ckpt   ./model.pth 
 ```
-If you want to test the kitti dataset, please see [here](./datasets/KITTI/README.md)
+sh download_data.sh
+```
 
+
+## Quick Start (Inference)
+
+1. Download the model weights
+   * [ResNeXt50 backbone](https://cloudstor.aarnet.edu.au/plus/s/ixWf3nTJFZ0YE4q)
+2. Prepare data. 
+   * Move the downloaded weights to  `<project_dir>/` 
+   * Put the testing RGB images to `<project_dir>/Minist_Test/test_images/`. Predicted depths and reconstructed point cloud are saved under `<project_dir>/Minist_Test/test_images/outputs`
+
+3. Test monocular depth prediction. Note that the predicted depths are affine-invariant. 
+```bash
+export PYTHONPATH="<PATH to DiverseDepth>"
+# run the ResNet-50
+python ./Minist_Test/tools/test_depth.py --load_ckpt model.pth
+ 
+```
+
+## Training
+The training code will be released soon.
 
 
 ### Citation
 ```
+@article{yin2021virtual,
+  title={Virtual Normal: Enforcing Geometric Constraints for Accurate and Robust Depth Prediction},
+  author={Yin, Wei and Liu, Yifan and Shen, Chunhua},
+  journal={arXiv preprint arXiv:2103.04216},
+  year={2021}
+}
 @article{yin2020diversedepth,
   title={DiverseDepth: Affine-invariant Depth Prediction Using Diverse Data},
   author={Yin, Wei and Wang, Xinlong and Shen, Chunhua and Liu, Yifan and Tian, Zhi and Xu, Songcen and Sun, Changming and Renyin, Dou},
