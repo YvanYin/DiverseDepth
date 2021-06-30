@@ -60,7 +60,7 @@ The training code will be released soon.
 @article{yin2021virtual,
   title={Virtual Normal: Enforcing Geometric Constraints for Accurate and Robust Depth Prediction},
   author={Yin, Wei and Liu, Yifan and Shen, Chunhua},
-  journal={TPAMI},
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI)},
   year={2021}
 }
 @article{yin2020diversedepth,
