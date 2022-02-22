@@ -4,6 +4,8 @@ This project aims to improve the generalization ability of the monocular depth e
 This repository contains the source code of our paper (the DiverseDepth part):
 1. [Wei Yin, Yfan Liu, Chunhua Shen, Virtual Normal: Enforcing Geometric Constraints for Accurate and Robust Depth Prediction](https://arxiv.org/abs/2103.04216).
 
+Training codes have been released!!
+
 ## Some Results
 
 ![Any images online](./examples/any_imgs.jpg)
