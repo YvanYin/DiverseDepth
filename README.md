@@ -52,7 +52,10 @@ python ./Minist_Test/tools/test_depth.py --load_ckpt model.pth
 ```
 
 ## Training
-The training code will be released soon.
+
+1. Download the ResNeXt pretrained weight
+   * [ResNeXt50](https://cloudstor.aarnet.edu.au/plus/s/J87DYsTlOjD83LR)
+2. Download the training data. 
 
 
 ### Citation
