@@ -71,7 +71,7 @@ def do_train(train_dataloader, val_dataloader, train_args,
              model, save_to_disk,
              scheduler, optimizer, val_err,
              logger, tblogger=None):
-
+    print(cfg.TRAIN.BASE_LR)
     # training status for logging
     if save_to_disk:
         training_stats = TrainingStats(train_args, cfg.TRAIN.LOG_INTERVAL, tblogger if train_args.use_tfboard else None)
@@ -149,6 +149,12 @@ def do_train(train_dataloader, val_dataloader, train_args,
 
 
 def main_worker(local_rank: int, ngpus_per_node: int, train_args, val_args):
+    train_args.global_rank = train_args.node_rank * ngpus_per_node + local_rank
+    train_args.local_rank = local_rank
+    val_args.global_rank = train_args.global_rank
+    val_args.local_rank = local_rank
+    merge_cfg_from_file(train_args)
+
     global logger
     # Set logger
     log_output_dir = cfg.TRAIN.LOG_DIR
@@ -163,11 +169,6 @@ def main_worker(local_rank: int, ngpus_per_node: int, train_args, val_args):
     if train_args.use_tfboard and  local_rank == 0:
         from tensorboardX import SummaryWriter
         tblogger = SummaryWriter(cfg.TRAIN.LOG_DIR)
-
-    train_args.global_rank = train_args.node_rank * ngpus_per_node + local_rank
-    train_args.local_rank = local_rank
-    val_args.global_rank = train_args.global_rank
-    val_args.local_rank = local_rank
 
     # init
     if train_args.distributed:
@@ -257,8 +258,6 @@ def main():
 
     # Randomize args.dist_url to avoid conflicts on same machine
     train_args.dist_url = train_args.dist_url + str(os.getpid() % 100).zfill(2)
-
-    merge_cfg_from_file(train_args)
 
     if train_args.distributed:
         mp.spawn(main_worker, nprocs=ngpus_per_node, args=(ngpus_per_node, train_args, val_args))
