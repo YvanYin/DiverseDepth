@@ -152,42 +152,37 @@ def evaluate_rel_err(pred, gt, smoothed_criteria, mask_invalid=None, scale=10.0 
 
 
 def weighted_human_disagreement_rate(gt, pred):
-    p12_index = select_index(gt.size)
+    p12_index = select_index(gt)
     gt_reshape = np.reshape(gt, gt.size)
     pred_reshape = np.reshape(pred, pred.size)
-    gt_p1 = gt_reshape[p12_index['p1']]
-    gt_p2 = gt_reshape[p12_index['p2']]
-    pred_p1 = pred_reshape[p12_index['p1']]
-    pred_p2 = pred_reshape[p12_index['p2']]
+    mask = gt > 0
+    gt_p1 = gt_reshape[mask][p12_index['p1']]
+    gt_p2 = gt_reshape[mask][p12_index['p2']]
+    pred_p1 = pred_reshape[mask][p12_index['p1']]
+    pred_p2 = pred_reshape[mask][p12_index['p2']]
 
-    gt_p2[gt_p2 == 0.] = 0.00001
-    pred_p2[pred_p2 == 0.] = 0.00001
-    gt_p12 = gt_p1 / gt_p2
-    pred_p12 = pred_p1 / pred_p2
+    p12_rank_gt = np.zeros_like(gt_p1)
+    p12_rank_gt[gt_p1 > gt_p2] = 1
+    p12_rank_gt[gt_p1 < gt_p2] = -1
 
-    l12_gt = np.zeros_like(gt_p12)
-    l12_gt[gt_p12 > 1.02] = 1
-    l12_gt[gt_p12 < 0.98] = -1
+    p12_rank_pred = np.zeros_like(gt_p1)
+    p12_rank_pred[pred_p1 > pred_p2] = 1
+    p12_rank_pred[pred_p1 < pred_p2] = -1
 
-    l12_pred = np.zeros_like(pred_p12)
-    l12_pred[pred_p12 > 1.02] = 1
-    l12_pred[pred_p12 < 0.98] = -1
-
-    err = np.sum(l12_gt != l12_pred)
+    err = np.sum(p12_rank_gt != p12_rank_pred)
     valid_pixels = gt_p1.size
     return err, valid_pixels
 
 
-def select_index(img_size, select_size=5000):
-    p1 = np.random.choice(img_size, int(img_size), replace=False)
-    np.random.shuffle(p1)
-    p2 = np.random.choice(img_size, int(img_size), replace=False)
-    np.random.shuffle(p2)
+def select_index(gt_depth, select_size=10000):
+    valid_size = np.sum(gt_depth>0)
+    try:
+        p = np.random.choice(valid_size, select_size*2, replace=False)
+    except:
+        p = np.random.choice(valid_size, select_size*2*2, replace=True)
+    np.random.shuffle(p)
+    p1 = p[0:select_size*2:2]
+    p2 = p[1:select_size*2:2]
 
-    mask = p1 != p2
-    p1 = p1[mask]
-    p2 = p2[mask]
-    p1 = p1[:select_size]
-    p2 = p2[:select_size]
     p12_index = {'p1': p1, 'p2': p2}
     return p12_index
