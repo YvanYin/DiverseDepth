@@ -28,7 +28,8 @@ Training codes have been released!!
 We collect multi-source data to construct our DiverseDepth dataset. The It consists of three parts:
 Part-in (collected from taskonomy):  contains over 100K images
 Part-out (collected from DIML, we have reprocessed its disparity): contains over 120K images
-Part-fore (collected from webstereo images and videos): contains 109703 images.
+Part-fore (collected from webstereo images and videos): contains 109703 images. 
+We used the [GNet](https://github.com/feihuzhang/GANet) method to recompute the disparity of DIML data instead of original provided disparity maps. 
 We provide two ways to download data. 
 1) Download from Cloudstor. You can download them with the following method.
 
