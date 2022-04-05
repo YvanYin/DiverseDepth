@@ -1,4 +1,7 @@
-# We defaulty put all data in the Train/datasets. You can put them anywhere but create softlinks in Train/datasets.
+# We defaulty put all data in the Train/datasets. You can put them anywhere but create softlinks under Train/datasets.
+
+# We provide two way to download data. 1) Cloudstor; 2) Google Drive
+# 1. Download from CloudStor:
 
 # download part-fore
 cd Train/datasets
@@ -32,7 +35,6 @@ wget https://cloudstor.aarnet.edu.au/plus/s/t334giSOJtC97Uq/download -O taskonom
 wget https://cloudstor.aarnet.edu.au/plus/s/kvLcrVSWfOsERsI/download -O taskonomy_depths.tar.gz
 tar -xvf ./*.tar.gz
 unzip annotations.zip
-
 
 
 # The overview of data under Train/datasets are:
