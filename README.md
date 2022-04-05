@@ -28,12 +28,14 @@ Training codes have been released!!
 We collect multi-source data to construct our DiverseDepth dataset. The It consists of three parts:
 Part-in (collected from taskonomy):  contains over 100K images
 Part-out (collected from DIML, we have reprocessed its disparity): contains over 120K images
-Part-fore (collected from webstereo images and videos): contains 109703 images
-You can download them with the following method.
+Part-fore (collected from webstereo images and videos): contains 109703 images.
+We provide two ways to download data. 
+1) Download from Cloudstor. You can download them with the following method.
 
 ```
 sh download_data.sh
 ```
+2) Download from Google Drive. See [here](./download_data_google_drive.md). for details.
 
 
 ## Quick Start (Inference)
