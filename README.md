@@ -1,8 +1,10 @@
 #### DiverseDepth Project
-This project aims to improve the generalization ability of the monocular depth estimation method on diverse scenes. We propose a learning method and a diverse dataset, termed DiverseDepth, to solve this problem. 
+This project aims to improve the generalization ability of the monocular depth estimation method on diverse scenes. We propose a learning method and a diverse dataset, termed DiverseDepth, to solve this problem.  The [DiverseDepth](https://arxiv.org/abs/2002.00569) contents have been published in our "Virtual Normal" TPAMI version.
 
 This repository contains the source code of our paper (the DiverseDepth part):
 1. [Wei Yin, Yfan Liu, Chunhua Shen, Virtual Normal: Enforcing Geometric Constraints for Accurate and Robust Depth Prediction](https://arxiv.org/abs/2103.04216).
+2. [Wei Yin, Xinlong Wang, Chunhua Shen, Yifan Liu, Zhi Tian, Songcen Xu, Changming Sun, Dou Renyin. DiverseDepth: Affine-invariant Depth Prediction Using Diverse Data
+](https://arxiv.org/abs/2002.00569)
 
 Training codes have been released!!
 
@@ -103,12 +105,6 @@ python ./Minist_Test/tools/test_depth.py --load_ckpt model.pth
   author={Yin, Wei and Liu, Yifan and Shen, Chunhua},
   journal={IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI)},
   year={2021}
-}
-@article{yin2020diversedepth,
-  title={DiverseDepth: Affine-invariant Depth Prediction Using Diverse Data},
-  author={Yin, Wei and Wang, Xinlong and Shen, Chunhua and Liu, Yifan and Tian, Zhi and Xu, Songcen and Sun, Changming and Renyin, Dou},
-  journal={arXiv preprint arXiv:2002.00569},
-  year={2020}
 }
 ```
 ### Contact
